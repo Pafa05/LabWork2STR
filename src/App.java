@@ -43,27 +43,20 @@ public class App {
                     int targetX = scan.nextInt();
                     int targetZ = scan.nextInt();
 
-                    // 2. Instancie a thread com os parâmetros
-                    GotoXZThread moveXZThread = new GotoXZThread(
-                            axisX,
-                            axisZ,
-                            axisY,
+                    GotoXZThread moveXZThread = new GotoXZThread(axisX, axisZ,  axisY,
                             targetX,
                             targetZ
 //                            completionSem // Passa o semáforo para sinalizar no fim
                     );
 
-                    // 3. Chame o método .start() para iniciar a execução da thread
                     moveXZThread.start();
-
-                    // Opção para a thread principal aguardar a conclusão
-                    /* System.out.println("Aguardando conclusão do movimento...");
-                    completionSem.acquire(); // Bloqueia até a thread chamar release()
-                    System.out.println("Movimento XZ concluído com sucesso!");
-                    */
                     break;
-                case 11: calibThread.start();
-                calibThread2.start(); break;
+                case 11: CalibrationThread newCalibX = new CalibrationThread(axisX);
+                    newCalibX.start();
+
+                    CalibrationThread newCalibZ = new CalibrationThread(axisZ);
+                    newCalibZ.start();
+                 break;
                 default: System.out.println("Unknown option."); break;
             }
         }

@@ -23,11 +23,11 @@ public class CalibrationThread extends Thread {
                 }
             }
             axis.stop();
-            if (axis.getPos() > 1) {
+        }
+           else if (axis.getPos() > 1) {
                 axis.gotoPos(1);
             }
         }
-    }
     public void initializeCalibration() {
         // Safely calibrate whichever axis(es) are present.
         if (this.axis != null) {
