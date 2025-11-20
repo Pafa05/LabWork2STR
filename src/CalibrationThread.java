@@ -12,7 +12,22 @@ public class CalibrationThread extends Thread {
         this.axis1x = axisX;
         this.axis2z = axisZ;
     }
-    
+    public void calibrateSelectedAxis(Axis axis) {
+        if (axis.getPos() == -1) {
+            axis.moveForward();
+            while (axis.getPos() == -1 || axis.getPos() > 3) {
+                try {
+                    Thread.sleep(10); // Dá 10ms de folga ao CPU
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+            axis.stop();
+            if (axis.getPos() > 1) {
+                axis.gotoPos(1);
+            }
+        }
+    }
     public void initializeCalibration() {
         // Safely calibrate whichever axis(es) are present.
         if (this.axis != null) {
@@ -48,16 +63,7 @@ public class CalibrationThread extends Thread {
 //        }
 //    }
 
-    public void calibrateSelectedAxis(Axis axis) {
-        if (axis.getPos() == -1) {
-            axis.moveForward();
-            while (axis.getPos() == -1 || axis.getPos() > 3) { }
-            axis.stop();
-            if (axis.getPos() > 1) {
-                axis.gotoPos(1);
-            }
-        }
-    }
+
 
     @Override
     public void run() {

@@ -27,6 +27,11 @@ public class AxisX implements Axis {
             if (pos == 1) {
                 moveBackward();
                 while (getPos() != pos) {
+                    try {
+                        Thread.sleep(10); // Dá 10ms de folga ao CPU
+                    } catch (InterruptedException e) {
+                        break;
+                    }
                 }
                 stop();
             }
@@ -34,6 +39,11 @@ public class AxisX implements Axis {
             if (pos == 2) {
                 moveForward();
                 while (getPos() != pos) {
+                    try {
+                        Thread.sleep(10); // Dá 10ms de folga ao CPU
+                    } catch (InterruptedException e) {
+                        break;
+                    }
                 }
                 stop();
             }
@@ -41,6 +51,11 @@ public class AxisX implements Axis {
             if (pos == 3) {
                 moveForward();
                 while (getPos() != pos) {
+                    try {
+                        Thread.sleep(10); // Dá 10ms de folga ao CPU
+                    } catch (InterruptedException e) {
+                        break;
+                    }
                 }
                 stop();
             }

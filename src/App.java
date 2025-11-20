@@ -33,15 +33,15 @@ public class App {
                 case 1: axisX.moveBackward(); break;
                 case 2: axisX.moveForward(); break;
                 case 3: axisX.stop(); break;
-                case 4: axisX.gotoPos(3); break;
-                case 5: axisX.gotoPos(2); break;
-                case 6: axisX.gotoPos(1); break;
-                case 7: axisZ.gotoPos(1); break;
-                case 8: axisZ.gotoPos(2); break;
-                case 9: axisZ.gotoPos(3); break;
+                case 4: System.out.println("LEI É GAY");
+                axisX.gotoPos(scan.nextInt()); break;
+                case 5: System.out.println("LEI É GAY2");
+                    axisZ.gotoPos(scan.nextInt()); break;
+                case 6: System.out.println("LEI É GAY3");
+                    axisY.gotoPos(scan.nextInt()); break;
                 case 10:
-                    int targetX = 3;
-                    int targetZ = 3;
+                    int targetX = scan.nextInt();
+                    int targetZ = scan.nextInt();
 
                     // 2. Instancie a thread com os parâmetros
                     GotoXZThread moveXZThread = new GotoXZThread(
@@ -62,9 +62,8 @@ public class App {
                     System.out.println("Movimento XZ concluído com sucesso!");
                     */
                     break;
-                case 11: axisY.gotoPos(2); break;
-                case 12: axisY.gotoPos(1); break;
-                case 13: axisY.gotoPos(3); break;
+                case 11: calibThread.start();
+                calibThread2.start(); break;
                 default: System.out.println("Unknown option."); break;
             }
         }
