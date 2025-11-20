@@ -27,11 +27,30 @@ public class GotoXZThread extends Thread {
                 axisY.gotoPos(2); // Y=2 é a posição 'in_cage' ou 'center position'
             }
 
-            if (axisX.getPos() != targetX || axisZ.getPos() != targetZ) {
-                axisX.gotoPos(targetX);
-                axisZ.gotoPos(targetZ);
-            }
+            Thread moveX = new Thread(() -> {
+                if (axisX.getPos() != targetX) {
+                    System.out.println("   -> X: A mover para " + targetX);
+                    axisX.gotoPos(targetX);
+                    System.out.println("   -> X: Chegou ao destino.");
+                }
+            });
 
+            // Thread para mover Z
+            Thread moveZ = new Thread(() -> {
+                if (axisZ.getPos() != targetZ) {
+                    System.out.println("   -> Z: A mover para " + targetZ);
+                    axisZ.gotoPos(targetZ);
+                    System.out.println("   -> Z: Chegou ao destino.");
+                }
+            });
+
+            moveX.start();
+            moveZ.start();
+
+            moveX.join();
+            moveZ.join();
+
+//
 
         } catch (Exception e) {
             System.err.println("LEI É GAY" + e.getMessage());
