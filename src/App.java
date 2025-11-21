@@ -19,6 +19,7 @@ public class App {
         AxisX axisX = new AxisX();
         AxisY axisY = new AxisY();
         AxisZ axisZ = new AxisZ();
+        Mechanism mechanism = new Mechanism(axisY);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         Scanner scan = new Scanner(System.in);
@@ -63,7 +64,7 @@ public class App {
                     int targetX1 = scan.nextInt(); scan.nextLine();
                     System.out.println("Inserir posição Z");
                     int targetZ1 = scan.nextInt(); scan.nextLine();
-                    ManualDeliver manu = new ManualDeliver(pallet, targetX1, targetZ1);
+                    ManualDeliver manu = new ManualDeliver(mechanism,pallet, targetX1, targetZ1);
                     manu.run();
                 }
                 case 10:

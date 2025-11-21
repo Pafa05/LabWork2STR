@@ -7,7 +7,8 @@ public class ManualDeliver {
     private  AxisY axisY;
     private Mechanism mechanism;
 
-    public ManualDeliver(Pallet pallet, int targetX, int targetZ) {
+    public ManualDeliver(Mechanism mechanism, Pallet pallet, int targetX, int targetZ) {
+        this.mechanism = mechanism;
         this.pallet = pallet;
         this.targetX = targetX;
         this.targetZ = targetZ;

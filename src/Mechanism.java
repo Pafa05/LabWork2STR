@@ -1,7 +1,12 @@
 public class Mechanism {
+    private final AxisY axisY;
      AxisX axisx = new AxisX();
      AxisY axisy = new AxisY();
      AxisZ axisz = new AxisZ();
+
+    public Mechanism(AxisY axisY) {
+        this.axisY = axisY;
+    }
     public void ledOn(int ledNumber) {
         Storage.ledOn(ledNumber);
     }
