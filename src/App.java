@@ -1,5 +1,8 @@
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -16,6 +19,8 @@ public class App {
         AxisX axisX = new AxisX();
         AxisY axisY = new AxisY();
         AxisZ axisZ = new AxisZ();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         Scanner scan = new Scanner(System.in);
         int op = -1;
 
@@ -39,6 +44,28 @@ public class App {
                     axisZ.gotoPos(scan.nextInt()); break;
                 case 6: System.out.println("LEI É GAY3");
                     axisY.gotoPos(scan.nextInt()); break;
+                case 7: {
+                    System.out.println("ppp");
+                    System.out.println("Inserir tipo da pallet");
+                    String tipoPallet = scan.nextLine(); scan.nextLine();
+                    System.out.println("Inserir humidade");
+                    Double Humi = scan.nextDouble(); scan.nextLine();
+                    System.out.println("Inserir ID");
+                    String ID = scan.nextLine();
+                    System.out.println("Inserir data de colheita");
+                    String harvdate = scan.nextLine(); scan.nextLine();
+                    System.out.println("Inserir destino");
+                    String dest = scan.nextLine(); scan.nextLine();
+                    System.out.println("Inserir data de entrega");
+                    String shipdate = scan.nextLine(); scan.nextLine();
+                    Pallet pallet = new Pallet(tipoPallet, Humi, ID, LocalDate.parse(harvdate, formatter), dest, LocalDate.parse(shipdate, formatter));
+                    System.out.println("Inserir posição X");
+                    int targetX1 = scan.nextInt(); scan.nextLine();
+                    System.out.println("Inserir posição Z");
+                    int targetZ1 = scan.nextInt(); scan.nextLine();
+                    ManualDeliver manu = new ManualDeliver(pallet, targetX1, targetZ1);
+                    manu.run();
+                }
                 case 10:
                     int targetX = scan.nextInt();
                     int targetZ = scan.nextInt();

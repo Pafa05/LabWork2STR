@@ -14,7 +14,7 @@ public class ManualDeliver {
 //        this.finishedSemaphore = finishedSemaphore;
     }
 
-   @Override
+
    public void run() {
        GotoXZThread moveXZThread = new GotoXZThread(axisX, axisZ,  axisY, targetX, targetZ);
        moveXZThread.start();
