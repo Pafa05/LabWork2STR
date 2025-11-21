@@ -1,12 +1,16 @@
 public class AxisZ implements Axis {
     @Override
     public void moveForward() {
-        Storage.moveZUp();
+        if(Storage.getYPos()==2) {
+            Storage.moveZUp();
+        }
     }
 
     @Override
     public void moveBackward() {
-        Storage.moveZDown();
+        if (Storage.getYPos()==2) {
+            Storage.moveZDown();
+        }
     }
 
     @Override
@@ -21,52 +25,54 @@ public class AxisZ implements Axis {
 
     @Override
     public void gotoPos(int pos) {
-        if (pos != getPos()) {
-            if (pos == 1) {
-                moveBackward();
-                while (getPos() != pos) {
-                    try {
-                        Thread.sleep(10); // Dá 10ms de folga ao CPU
-                    } catch (InterruptedException e) {
-                        break;
+        if (Storage.getYPos()==2) {
+            if (pos != getPos()) {
+                if (pos == 1) {
+                    moveBackward();
+                    while (getPos() != pos) {
+                        try {
+                            Thread.sleep(10); // Dá 10ms de folga ao CPU
+                        } catch (InterruptedException e) {
+                            break;
+                        }
                     }
+                    stop();
                 }
-                stop();
-            }
 
-            if (pos == 2) {
-                moveForward();
-                while (getPos() != pos) {
-                    try {
-                        Thread.sleep(10); // Dá 10ms de folga ao CPU
-                    } catch (InterruptedException e) {
-                        break;
+                if (pos == 2) {
+                    moveForward();
+                    while (getPos() != pos) {
+                        try {
+                            Thread.sleep(10); // Dá 10ms de folga ao CPU
+                        } catch (InterruptedException e) {
+                            break;
+                        }
                     }
+                    stop();
                 }
-                stop();
-            }
 
-            if (pos == 3) {
-                moveForward();
-                while (getPos() != pos) {
-                    try {
-                        Thread.sleep(10); // Dá 10ms de folga ao CPU
-                    } catch (InterruptedException e) {
-                        break;
+                if (pos == 3) {
+                    moveForward();
+                    while (getPos() != pos) {
+                        try {
+                            Thread.sleep(10); // Dá 10ms de folga ao CPU
+                        } catch (InterruptedException e) {
+                            break;
+                        }
                     }
+                    stop();
                 }
-                stop();
+
+
+               /* while (getThePos() != pos) {
+                    vTaskDelay(pdMS_TO_TICKS(10));
+                } // espera atè chegar a posiçao */
+
+                stop(); // pára o cilindro
             }
-
-
-           /* while (getThePos() != pos) {
-                vTaskDelay(pdMS_TO_TICKS(10));
-            } // espera atè chegar a posiçao */
-
-            stop(); // pára o cilindro
-        }
-        else {
-            return;
+            else {
+                return;
+            }
         }
 
     }

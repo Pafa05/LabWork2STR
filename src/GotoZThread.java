@@ -10,10 +10,11 @@ public class GotoZThread extends Thread {
 
     @Override
     public void run() {
-        axisZ.gotoPos(targetPos);
-        // Chama o método gotoPos() do AxisX que contém a lógica de movimento e paragem.
-        axisZ.gotoPos(targetPos);
-        // Em um sistema real, aqui você poderia sinalizar a conclusão do movimento.
-        // Exemplo: sem_X_finished.release(); (usando um Semaphore) [cite: 4020]
+            axisZ.gotoPos(targetPos);
+            // Chama o método gotoPos() do AxisX que contém a lógica de movimento e paragem.
+            axisZ.gotoPos(targetPos);
+            // Em um sistema real, aqui você poderia sinalizar a conclusão do movimento.
+            // Exemplo: sem_X_finished.release(); (usando um Semaphore) [cite: 4020]
+
     }
 }

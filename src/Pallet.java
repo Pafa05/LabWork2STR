@@ -1,10 +1,12 @@
+import java.time.LocalDate;
+
 public class Pallet {
     private String productType;
     private double humidity; // Em percentagem
     private String producerID;
-    private String harvestDate; // Pode ser String ou LocalDate
+    private LocalDate harvestDate; // Pode ser String ou LocalDate
     private String destination;
-    private String shippingDate; // Pode ser String ou LocalDate
+    private LocalDate shippingDate; // Pode ser String ou LocalDate
 
     // Coordenadas de armazenamento (X, Z). -1 indica que não está armazenada.
     private int posX = -1;
@@ -12,7 +14,7 @@ public class Pallet {
 
     // Construtor
     public Pallet(String productType, double humidity, String producerID,
-                  String harvestDate, String destination, String shippingDate) {
+                  LocalDate harvestDate, String destination, LocalDate shippingDate) {
         this.productType = productType;
         this.humidity = humidity;
         this.producerID = producerID;
@@ -25,9 +27,9 @@ public class Pallet {
     public String getProductType() { return productType; }
     public double getHumidity() { return humidity; }
     public String getProducerID() { return producerID; }
-    public String getHarvestDate() { return harvestDate; }
+    public LocalDate getHarvestDate() { return harvestDate; }
     public String getDestination() { return destination; }
-    public String getShippingDate() { return shippingDate; }
+    public LocalDate getShippingDate() { return shippingDate; }
 
     public int getPosX() { return posX; }
     public int getPosZ() { return posZ; }
