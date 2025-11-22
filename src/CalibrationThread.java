@@ -44,32 +44,10 @@ public class CalibrationThread extends Thread {
         }
     }
 
-//    public void multiCalibrateInitialize() {
-//        if (this.axis1x != null && this.axis2z != null) {
-//            // Calibrate X and Z in parallel using separate threads
-//            Thread calibrateX = new Thread(() -> calibrateSelectedAxis(axis1x));
-//            Thread calibrateZ = new Thread(() -> calibrateSelectedAxis(axis2z));
-//
-//            calibrateX.start();
-//            calibrateZ.start();
-//
-//            // Wait for both threads to finish
-//            try {
-//                calibrateX.join();
-//                calibrateZ.join();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-
-
     @Override
     public void run() {
         if (this.axis != null) {
-            this.initializeCalibration();} else {
-//            this.multiCalibrateInitialize();
-           }
+            this.initializeCalibration();}
+        else {}
     }
 }

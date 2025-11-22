@@ -17,8 +17,11 @@ public class ManualDeliver {
 
 
    public void run() {
-       GotoXZThread moveXZThread = new GotoXZThread(axisX, axisZ,  axisY, targetX, targetZ);
-       moveXZThread.start();
+//       GotoXZThread moveXZThread = new GotoXZThread(axisX, axisZ,  axisY, targetX, targetZ);
+//       moveXZThread.start();
+       mechanism.goToPosition(targetX, targetZ);
+
+
        mechanism.putPartInCell(targetZ);
    }
 

@@ -47,7 +47,19 @@ public class AxisY implements Axis{
                 stop();
             }
 
-            if (pos == 2) {
+            if (pos == 2 && getPos() == 3) {
+                moveBackward();
+                while (pos != getPos()) {
+                    try {
+                        Thread.sleep(10); // Dá 10ms de folga ao CPU
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+                stop();
+            }
+
+            if (pos == 2 && getPos() == 1) {
                 moveForward();
                 while (pos != getPos()) {
                     try {

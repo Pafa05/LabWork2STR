@@ -1,16 +1,13 @@
 public class AxisZ implements Axis {
+
     @Override
     public void moveForward() {
-        if(Storage.getYPos()==2) {
-            Storage.moveZUp();
-        }
+        Storage.moveZUp();
     }
 
     @Override
     public void moveBackward() {
-        if (Storage.getYPos()==2) {
-            Storage.moveZDown();
-        }
+        Storage.moveZDown();
     }
 
     @Override
@@ -23,57 +20,50 @@ public class AxisZ implements Axis {
         return Storage.getZPos();
     }
 
+    // Método auxiliar para converter o ID do sensor em altura física
+    private int getPhysicalHeight(int sensorPos) {
+        switch (sensorPos) {
+            case 1:  return 1; // Nível 1 Baixo
+            case 10: return 2; // Nível 1 Cima
+            case 2:  return 3; // Nível 2 Baixo
+            case 20: return 4; // Nível 2 Cima
+            case 3:  return 5; // Nível 3 Baixo
+            case 30: return 6; // Nível 3 Cima
+            default: return -1; // Desconhecido
+        }
+    }
+
     @Override
-    public void gotoPos(int pos) {
-        if (Storage.getYPos()==2) {
-            if (pos != getPos()) {
-                if (pos == 1) {
-                    moveBackward();
-                    while (getPos() != pos) {
-                        try {
-                            Thread.sleep(10); // Dá 10ms de folga ao CPU
-                        } catch (InterruptedException e) {
-                            break;
-                        }
-                    }
-                    stop();
-                }
+    public void gotoPos(int targetPos) {
+        int currentPos = getPos();
 
-                if (pos == 2) {
-                    moveForward();
-                    while (getPos() != pos) {
-                        try {
-                            Thread.sleep(10); // Dá 10ms de folga ao CPU
-                        } catch (InterruptedException e) {
-                            break;
-                        }
-                    }
-                    stop();
-                }
+        // Se já lá estamos, não faz nada
+        if (currentPos == targetPos) return;
 
-                if (pos == 3) {
-                    moveForward();
-                    while (getPos() != pos) {
-                        try {
-                            Thread.sleep(10); // Dá 10ms de folga ao CPU
-                        } catch (InterruptedException e) {
-                            break;
-                        }
-                    }
-                    stop();
-                }
+        // 1. Calcular alturas físicas
+        int currentHeight = getPhysicalHeight(currentPos);
+        int targetHeight = getPhysicalHeight(targetPos);
 
+        // 2. Decidir direção com base na altura física
+        // Se altura atual < altura alvo -> SUBIR (Forward)
+        // Se altura atual > altura alvo -> DESCER (Backward)
+        if (targetHeight > currentHeight) {
+            moveForward(); // Sobe
+        } else {
+            moveBackward(); // Desce
+        }
 
-               /* while (getThePos() != pos) {
-                    vTaskDelay(pdMS_TO_TICKS(10));
-                } // espera atè chegar a posiçao */
-
-                stop(); // pára o cilindro
-            }
-            else {
-                return;
+        // 3. Loop de espera com sleep (Correção de Busy-Waiting)
+        while (getPos() != targetPos) {
+            try {
+                Thread.sleep(10); // Liberta CPU
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
             }
         }
 
+        // 4. Parar ao chegar
+        stop();
     }
 }

@@ -11,23 +11,26 @@ public class App {
         // initialize native hardware (calls JNI)
         Storage.initializeHardwarePorts();
 
-        CalibrationThread calibThread = new CalibrationThread(new AxisX());
-        calibThread.start();
-        CalibrationThread calibThread2 = new CalibrationThread(new AxisZ());
-        calibThread2.start();
-
         AxisX axisX = new AxisX();
         AxisY axisY = new AxisY();
         AxisZ axisZ = new AxisZ();
-        Mechanism mechanism = new Mechanism(axisY);
+        PalletGrid grid = new PalletGrid();
+        CalibrationThread calibThread = new CalibrationThread(axisX);
+        calibThread.start();
+        CalibrationThread calibThread2 = new CalibrationThread(axisZ);
+        calibThread2.start();
+
+        Mechanism mechanism = new Mechanism(axisX, axisY, axisZ);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
 
         Scanner scan = new Scanner(System.in);
         int op = -1;
 
 
+
         while (op != 0) {
-            System.out.println("Enter an option (0=exit, 1=move right, 2=move left, 3=stop, 10=go to (x,z):");
+            System.out.println("Enter an option (0=exit, 1=move right, 2=move left, 3=stop, 10=go to (x,z), 12 inventory:");
             if (!scan.hasNextInt()) {
                 System.out.println("Invalid input, try again.");
                 scan.next(); // consume invalid token
@@ -50,7 +53,7 @@ public class App {
                     System.out.println("Inserir tipo da pallet");
                     String tipoPallet = scan.nextLine(); scan.nextLine();
                     System.out.println("Inserir humidade");
-                    Double Humi = scan.nextDouble(); scan.nextLine();
+                    double Humi = scan.nextDouble(); scan.nextLine();
                     System.out.println("Inserir ID");
                     String ID = scan.nextLine();
                     System.out.println("Inserir data de colheita");
@@ -64,8 +67,15 @@ public class App {
                     int targetX1 = scan.nextInt(); scan.nextLine();
                     System.out.println("Inserir posição Z");
                     int targetZ1 = scan.nextInt(); scan.nextLine();
-                    ManualDeliver manu = new ManualDeliver(mechanism,pallet, targetX1, targetZ1);
-                    manu.run();
+                    if (grid.isCellFree(targetX1, targetZ1)) {
+                        ManualDeliver manu = new ManualDeliver(mechanism, pallet, targetX1, targetZ1);
+                        manu.run();
+                        grid.storePallet(pallet, targetX1, targetZ1);
+
+                    } else {
+                        System.out.println("Operação cancelada: A célula destino já está ocupada!");
+                    }
+                    break;
                 }
                 case 10:
                     int targetX = scan.nextInt();
@@ -85,6 +95,9 @@ public class App {
                     CalibrationThread newCalibZ = new CalibrationThread(axisZ);
                     newCalibZ.start();
                  break;
+                case 12:
+                    grid.printStatus();
+                    break;
                 default: System.out.println("Unknown option."); break;
             }
         }
