@@ -12,7 +12,7 @@ public class Mechanism {
         Storage.ledOn(ledNumber);
     }
 
-    public void ledOff(){
+    public void ledsOff(){
         Storage.ledsOff();
     }
 
@@ -70,6 +70,10 @@ public class Mechanism {
             e.printStackTrace();
         }
 
+    }
+
+    public void setY(int y) {
+        axisY.gotoPos(y);
     }
 
 }

@@ -78,4 +78,99 @@ public class PalletGrid {
             System.out.println(); // Nova linha para o próximo nível Z
         }
     }
+
+    public void productlist() {
+        System.out.println("Lista de paletes:");
+        for (int z = 3; z >= 1; z--) { // Imprimir de cima para baixo (Z=3 no topo)
+            for (int x = 1; x <= 3; x++) {
+                Pallet p = getPalletInfo(x, z);
+                String status = (p == null) ? "" : "Pallet: " + p.getProductType() + " ," + p.getHumidity() + " ," + p.getProducerID() + "," + p.getShippingDate() ;
+                System.out.print(status + "\t");
+            }
+        }
+    }
+
+    public void palletlookup(String producer) {
+        System.out.println("Producer lookup:");
+        for (int z = 3; z >= 1; z--) {
+            for (int x = 1; x <= 3; x++) {
+                Pallet p = getPalletInfo(x, z);
+                if(p.getProductType().equals(producer)) {
+                    System.out.println("Localização:" + p.getPosX() +  "," + p.getPosZ());
+                    System.out.println("Humidade:" + p.getHumidity() + "%");
+                    System.out.println("Destino:" + p.getDestination());
+                    System.out.println("Data:" + p.getShippingDate());
+                }
+            }
+        }
+    }
+  //LEI É GAY
+    public int[] findBestPosition(String productType) {
+        int bestX = -1, bestZ = -1;
+        double bestScore = -Double.MAX_VALUE;
+
+        for (int x = 1; x <= 3; x++) {
+            for (int z = 1; z <= 3; z++) {
+                if (isCellFree(x, z)) {
+                    double score = calculateScore(x, z, productType);
+
+                    // Se encontrarmos um score melhor (ou igual mas mais perto), atualizamos
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestX = x;
+                        bestZ = z;
+                    }
+                }
+            }
+        }
+
+        if (bestX != -1) {
+            System.out.println("AI: Posição recomendada (" + bestX + "," + bestZ + ") com score " + bestScore);
+            return new int[]{bestX, bestZ};
+        }
+        return null; // Armazém cheio
+    }
+
+    private double calculateScore(int x, int z, String productType) {
+        double score = 0;
+
+        // 1. Minimizar Distância (de 1,1)
+        // Distância Manhattan: |x-1| + |z-1|. Quanto maior a distância, MENOR o score.
+        double dist = (x - 1) + (z - 1);
+        score -= dist * 1.0; // Peso 1.0 para distância
+
+        // 2. Agrupar por Tipo
+        // Se a coluna já tiver este produto, damos um bónus GRANDE
+        if (columnHasType(x, productType)) {
+            score += 10.0;
+        }
+
+        // 3. Balancear Ocupação
+        // Preferir colunas mais vazias. Subtraímos pontos por cada item na coluna.
+        int colCount = countItemsInColumn(x);
+        score -= colCount * 2.0;
+
+        return score;
+    }
+
+    // Verifica se existe algum produto deste tipo na coluna X
+    private boolean columnHasType(int x, String type) {
+        int colIndex = x - 1;
+        for (int r = 0; r < 3; r++) {
+            if (cells[colIndex][r] != null && cells[colIndex][r].getProductType().equalsIgnoreCase(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Conta quantas paletes existem na coluna X
+    private int countItemsInColumn(int x) {
+        int count = 0;
+        int colIndex = x - 1;
+        for (int r = 0; r < 3; r++) {
+            if (cells[colIndex][r] != null) count++;
+        }
+        return count;
+    }
 }

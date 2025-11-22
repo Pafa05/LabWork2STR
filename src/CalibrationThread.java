@@ -7,11 +7,11 @@ public class CalibrationThread extends Thread {
         this.axis = axis;
     }
 
-    public CalibrationThread(Axis axisX, Axis axisZ) {
-        this.axis = null;
-        this.axis1x = axisX;
-        this.axis2z = axisZ;
-    }
+//    public CalibrationThread(Axis axisX, Axis axisZ) {
+//        this.axis = null;
+//        this.axis1x = axisX;
+//        this.axis2z = axisZ;
+//    }
     public void calibrateSelectedAxis(Axis axis) {
         if (axis.getPos() == -1) {
             axis.moveForward();
