@@ -44,6 +44,9 @@ public class Pallet {
         this.posZ = z;
     }
 
+    public void setAlert(Boolean alert) {
+        this.alert = alert; }
+
     // Método para facilitar a impressão (útil para o RH12 - Listar Produtos)
     @Override
     public String toString() {

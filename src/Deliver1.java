@@ -1,4 +1,4 @@
-public class Deliver1 {
+public class Deliver1 implements Runnable {
     private Pallet pallet;
     private Mechanism mechanism;
 
@@ -16,6 +16,8 @@ public class Deliver1 {
         mechanism.setY(1);
         try { Thread.sleep(2000); } catch (Exception e) {}
         mechanism.setY(2);
+        // Volta ao home (1,1) para deixar sistema pronto para próxima operação
+        mechanism.goToPosition(1, 1);
     }
 
 }

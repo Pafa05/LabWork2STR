@@ -1,4 +1,4 @@
-public class ManualStore {
+public class ManualStore implements Runnable{
     private  Pallet pallet;
     private  int targetX;
     private  int targetZ;

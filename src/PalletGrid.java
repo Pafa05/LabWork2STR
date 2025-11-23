@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 public class PalletGrid {
     // Matriz 3x3 para guardar as paletes.
     // null = célula vazia
@@ -80,31 +81,47 @@ public class PalletGrid {
     }
 
     public void productlist() {
-        System.out.println("Lista de paletes:");
+        System.out.println("=== Lista de Paletes Armazenadas ===");
+        boolean any = false;
         for (int z = 3; z >= 1; z--) { // Imprimir de cima para baixo (Z=3 no topo)
             for (int x = 1; x <= 3; x++) {
                 Pallet p = getPalletInfo(x, z);
-                String status = (p == null) ? "" : "Pallet: " + p.getProductType() + " ," + p.getHumidity() + " ," + p.getProducerID() + "," + p.getShippingDate() ;
-                System.out.print(status + "\t");
-            }
-        }
-    }
-
-    public void palletlookup(String producer) {
-        System.out.println("Producer lookup:");
-        for (int z = 3; z >= 1; z--) {
-            for (int x = 1; x <= 3; x++) {
-                Pallet p = getPalletInfo(x, z);
-                if(p.getProductType().equals(producer)) {
-                    System.out.println("Localização:" + p.getPosX() +  "," + p.getPosZ());
-                    System.out.println("Humidade:" + p.getHumidity() + "%");
-                    System.out.println("Destino:" + p.getDestination());
-                    System.out.println("Data:" + p.getShippingDate());
+                if (p != null) {
+                    any = true;
+                    System.out.println("Posição (" + x + "," + z + "): "
+                            + "Produto=" + p.getProductType()
+                            + ", Produtor=" + p.getProducerID()
+                            + ", Humidade=" + p.getHumidity() + "%"
+                            + ", Data de envio=" + p.getShippingDate());
                 }
             }
         }
+        if (!any) System.out.println("Nenhuma palete armazenada.");
     }
-  //LEI É GAY
+
+    public void palletlookup(String searchTerm) {
+        System.out.println("Procurando por tipo de produto ou ID do produtor: " + searchTerm);
+        boolean found = false;
+        for (int z = 3; z >= 1; z--) {
+            for (int x = 1; x <= 3; x++) {
+                Pallet p = getPalletInfo(x, z);
+                if (p != null && (p.getProductType().equalsIgnoreCase(searchTerm) ||
+                        p.getProducerID().equalsIgnoreCase(searchTerm))) {
+                    System.out.println("\n--- Pallet encontrada ---");
+                    System.out.println("Localização: (" + p.getPosX() +  ", " + p.getPosZ() + ")");
+                    System.out.println("Tipo de produto: " + p.getProductType());
+                    System.out.println("ID Produtor: " + p.getProducerID());
+                    System.out.println("Humidade: " + p.getHumidity() + "%");
+                    System.out.println("Destino: " + p.getDestination());
+                    System.out.println("Data de entrega: " + p.getShippingDate());
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            System.out.println("Nenhuma pallet encontrada com esse tipo de produto ou ID do produtor.");
+        }
+    }
     public int[] findBestPosition(String productType) {
         int bestX = -1, bestZ = -1;
         double bestScore = -Double.MAX_VALUE;
@@ -172,5 +189,43 @@ public class PalletGrid {
             if (cells[colIndex][r] != null) count++;
         }
         return count;
+    }
+
+    public void checkAlerts(LocalDate today, Mechanism mechanism) {
+        boolean alertFound = false;
+        System.out.println("--- A verificar alertas para o dia " + today + " ---");
+
+        for (int z = 1; z <= 3; z++) {
+            for (int x = 1; x <= 3; x++) {
+                Pallet p = getPalletInfo(x, z);
+
+                if (p != null) {
+                    // 1. Verificar Data de Envio (Shipping Date)
+                    // Se hoje for igual ou depois da data de envio, ALERTA!
+                    boolean dateAlert = !today.isBefore(p.getShippingDate()); // !isBefore é o mesmo que >=
+
+                    // 2. Verificar Humidade (Exemplo: > 80%)
+                    boolean humidityAlert = p.getHumidity() > 80.0;
+
+                    if (dateAlert || humidityAlert) {
+                        alertFound = true;
+                        p.setAlert(true);
+                        String motivo = dateAlert ? "[DATA ENVIO]" : "[HUMIDADE]";
+                        if (dateAlert && humidityAlert) motivo = "[DATA + HUMIDADE]";
+
+                        System.out.println("ALERTA " + motivo + ": Palete " + p.getProductType() +
+                                " em (" + x + "," + z + ")");
+                    }
+                }
+            }
+        }
+
+        // RH6: Ligar LED 1 se houver algum alerta
+        if (alertFound) {
+            LedBlink blinker = new LedBlink(mechanism, 1);
+            blinker.start();
+        } else {
+            mechanism.ledsOff();
+        }
     }
 }
